@@ -41,27 +41,37 @@ public class WebDriver {
     public void testSearch() {
         webDriverWait = new WebDriverWait(driver, 7);
 
-        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("global-enhancements-search-query")));
+        try {
 
-        WebElement searchInputBox = driver.findElement(By.id("global-enhancements-search-query"));
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("global-enhancements-search-query")));
 
-        searchInputBox.sendKeys("mattress");
-        searchInputBox.sendKeys(Keys.ENTER);
+            WebElement searchInputBox = driver.findElement(By.id("global-enhancements-search-query"));
 
-        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div/div[4]/div[5]/div[3]/div[6]/div[2]/div[1]/span/span/span[1]"))));
+            searchInputBox.sendKeys("mattress");
+            searchInputBox.sendKeys(Keys.ENTER);
 
-        WebElement searchResults = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div/div[4]/div[5]/div[3]/div[6]/div[2]/div[1]/span/span/span[1]"));
+            webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div/div[4]/div[5]/div[3]/div[6]/div[2]/div[1]/span/span/span[1]"))));
 
-        String expectedResults = "12,792 results,";
-        String actualResults = searchResults.getText();
+            WebElement searchResults = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div[1]/div/div[4]/div[5]/div[3]/div[6]/div[2]/div[1]/span/span/span[1]"));
 
-        Assert.assertEquals(expectedResults, actualResults);
-        System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
-    }
+            String expectedResults = "12,792 results,";
+            String actualResults = searchResults.getText();
+
+            Assert.assertEquals(expectedResults, actualResults);
+            System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
+        }
+
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        }
 
     @Test
     public void testRegister() throws InterruptedException {
         webDriverWait = new WebDriverWait(driver, 7);
+
+        try {
 
         webDriverWait.until(ExpectedConditions.elementToBeClickable(driver.findElementByCssSelector("#gnav-header-inner > div.wt-flex-shrink-xs-0 > nav > ul > li:nth-child(1) > button"))).click();
 
@@ -107,6 +117,56 @@ public class WebDriver {
         Assert.assertEquals(expectedResults, actualResults);
         System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testLogin() {
+        webDriverWait = new WebDriverWait(driver, 7);
+
+        try {
+
+            webDriverWait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#gnav-header-inner > div.wt-flex-shrink-xs-0 > nav > ul > li:nth-child(1) > button"))).click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementById("join_neu_email_field")));
+
+            WebElement emailAddress = driver.findElementById("join_neu_email_field");
+            emailAddress.sendKeys("#wuXLIPq@gmail.com");
+
+            WebElement continueButton = driver.findElementByCssSelector("#join-neu-form > div.wt-grid.wt-grid--block > div > div:nth-child(9) > div > button");
+            continueButton.click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("join_neu_password_field")));
+
+            WebElement password = driver.findElementById("join_neu_password_field");
+            password.sendKeys("ag5olHjt");
+
+            WebElement checkBox = driver.findElementByXPath("//*[@id=\"join-neu-form\"]/div[2]/div/div[5]/div/label");
+            if (checkBox.isSelected()) {
+                checkBox.click();
+            }
+
+            WebElement signIn = driver.findElement(By.cssSelector("#join-neu-form > div:nth-child(8) > div > div:nth-child(10) > div > button"));
+            signIn.click();
+
+            webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByXPath("//*[@id=\"content\"]/div/section/div/div[1]/div/div/div/h1[1]")));
+
+            WebElement loginConfirmation = driver.findElementByXPath("//*[@id=\"content\"]/div/section/div/div[1]/div/div/div/h1[1]");
+
+            String expectedResults = "Welcome to Etsy, Eddy!";
+            String actualResults = loginConfirmation.getText();
+
+            Assert.assertEquals(expectedResults, actualResults);
+            System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
