@@ -6,14 +6,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import subSystems.ConnectToSqlDB;
 import subSystems.InputData;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class WebDriver {
@@ -157,12 +161,19 @@ public class WebDriver {
 
 
     }
+
     @Test
     public void testAddToCart() {
-            webDriverWait = new WebDriverWait(driver, 5);
+
+            Wait<ChromeDriver> fluentWait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(10))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(StaleElementReferenceException.class);
+
+//            webDriverWait = new WebDriverWait(driver, 5);
             Actions action = new Actions(driver);
 
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("catnav-primary-link--10")));
+            fluentWait.until(ExpectedConditions.elementToBeClickable(By.id("catnav-primary-link--10")));
             WebElement giftCardsMenu = driver.findElementById("catnav-primary-link--10");
 
             action.moveToElement(giftCardsMenu).build().perform();
@@ -170,7 +181,7 @@ public class WebDriver {
             WebElement shopGiftCards = driver.findElementById("catnav-l4--1234");
             shopGiftCards.click();
 
-            webDriverWait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("label[for='radio_giftcards_editor_amount_USD_10000'][class='wt-btn wt-action-group__item']")));
+            fluentWait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("label[for='radio_giftcards_editor_amount_USD_10000'][class='wt-btn wt-action-group__item']")));
 
             WebElement amount100 = driver.findElementByCssSelector("label[for='radio_giftcards_editor_amount_USD_10000'][class='wt-btn wt-action-group__item']");
 
@@ -197,7 +208,7 @@ public class WebDriver {
             WebElement addToCart = driver.findElementByCssSelector("button.wt-btn.wt-btn--primary.wt-width-full");
             addToCart.click();
 
-            webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("div.wt-display-flex-xs.wt-justify-content-space-between.wt-align-items-center>div>h1.wt-text-heading-01")));
+            fluentWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("div.wt-display-flex-xs.wt-justify-content-space-between.wt-align-items-center>div>h1.wt-text-heading-01")));
 
             String expectedResults = "1 item in your cart";
             String actualResults = driver.findElementByCssSelector("div.wt-display-flex-xs.wt-justify-content-space-between.wt-align-items-center>div>h1.wt-text-heading-01").getText();
