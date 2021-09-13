@@ -29,6 +29,9 @@ public class WebDriver {
     static ChromeDriver driver;
     static WebDriverWait webDriverWait;
 
+//    By searchBoxLocator = By.id("global-enhancements-search-query");
+//    WebElement searchBox = driver.findElementById("global-enhancements-search-query");
+
     @Before
     public void setUp() {
         System.setProperty("webdriver.chrome.driver", windowsChromeDriverPath);
@@ -59,7 +62,7 @@ public class WebDriver {
 
             WebElement searchResults = driver.findElement(By.xpath("//span[contains(text(), 'results,')] "));
 
-            String expectedResults = "12,798 results,";
+            String expectedResults = "12,744 results,";
             String actualResults = searchResults.getText();
 
             Assert.assertEquals(expectedResults, actualResults);
@@ -73,7 +76,7 @@ public class WebDriver {
         }
 
     @Test
-    public void testRegister() throws InterruptedException {
+    public void testRegister() {
         webDriverWait = new WebDriverWait(driver, 5);
 
         webDriverWait.until(ExpectedConditions.elementToBeClickable(driver.findElementByCssSelector("button.wt-btn.wt-btn--small.wt-btn--transparent.wt-mr-xs-1"))).click();
