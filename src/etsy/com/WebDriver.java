@@ -10,10 +10,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import subSystems.ConnectToSqlDB;
 import subSystems.InputData;
 
@@ -29,9 +26,6 @@ public class WebDriver {
     static ChromeDriver driver;
     static WebDriverWait webDriverWait;
 
-//    By searchBoxLocator = By.id("global-enhancements-search-query");
-//    WebElement searchBox = driver.findElementById("global-enhancements-search-query");
-
     @Before
     public void setUp() {
         System.setProperty("webdriver.chrome.driver", windowsChromeDriverPath);
@@ -42,6 +36,93 @@ public class WebDriver {
         driver.get(website);
         driver.manage().deleteAllCookies();
         driver.manage().window().maximize();
+
+    }
+
+    @Test
+    public void halloweenShopTest() throws InterruptedException {
+        webDriverWait = new WebDriverWait(driver, 5);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("span.wt-display-table-cell.wt-text-left-xs")));
+
+        WebElement halloweenShopButton = driver.findElementByCssSelector("span.wt-display-table-cell.wt-text-left-xs");
+        halloweenShopButton.click();
+
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[title='Trick or Treat Bag Halloween Applique Tote Bag Candy Personalized Name Bag Boy or Girl Up to 7 Letters ( NO Flower Clips )']>img[class='wt-height-full']")));
+
+        WebElement trickOrTreatBagsButton = driver.findElementByCssSelector("a[title='Trick or Treat Bag Halloween Applique Tote Bag Candy Personalized Name Bag Boy or Girl Up to 7 Letters ( NO Flower Clips )']>img[class='wt-height-full']");
+        trickOrTreatBagsButton.click();
+
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(driver.findElementById("inventory-variation-select-0")));
+
+        WebElement colorHandleMenu = driver.findElementById("inventory-variation-select-0");
+        colorHandleMenu.click();
+
+        Select select = new Select(colorHandleMenu);
+        select.selectByIndex(1);
+
+        Thread.sleep(2000);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("select#inventory-variation-select-1")));
+
+        WebElement selectFabric = driver.findElementByCssSelector("select#inventory-variation-select-1");
+        selectFabric.click();
+
+        Select select1 = new Select(selectFabric);
+        select1.selectByIndex(1);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("textarea#personalization-input")));
+
+        Thread.sleep(5000);
+
+        WebElement personalizationMessage = driver.findElementByCssSelector("textarea#personalization-input");
+        personalizationMessage.click();
+        personalizationMessage.sendKeys("This is a test message");
+
+        Thread.sleep(2000);
+
+        webDriverWait.until(ExpectedConditions.elementToBeClickable(driver.findElementByXPath("//div[contains(text(), 'Add to cart')]")));
+        WebElement addToCart = driver.findElementByXPath("//div[contains(text(), 'Add to cart')]");
+        addToCart.click();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByCssSelector("div.wt-display-flex-xs.wt-justify-content-space-between.wt-align-items-center>div>h1.wt-text-heading-01")));
+
+        String expectedResults = "1 item in your cart";
+        String actualResults = driver.findElementByCssSelector("div.wt-display-flex-xs.wt-justify-content-space-between.wt-align-items-center>div>h1.wt-text-heading-01").getText();
+
+        Assert.assertEquals(expectedResults, actualResults);
+        System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
+
+    }
+
+    @Test
+    public void hatsAndCapsPageTest() {
+        webDriverWait = new WebDriverWait(driver, 5);
+
+        Actions action = new Actions(driver);
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementById("catnav-primary-link-10855")));
+
+        action.moveToElement(driver.findElementById("catnav-primary-link-10855")).build().perform();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementById("side-nav-category-link-10856")));
+
+        action.moveToElement(driver.findElementById("side-nav-category-link-10856")).build().perform();
+
+        WebElement hatsAndCapsLink = driver.findElementById("catnav-l3-10857");
+        hatsAndCapsLink.click();
+
+        webDriverWait.until(ExpectedConditions.visibilityOf(driver.findElementByXPath("//span[contains(text(), 'results,')]")));
+
+        WebElement results = driver.findElementByXPath("//span[contains(text(), 'results,')]");
+
+        String expectedResults = "825,801 results,";
+        String actualResults = results.getText();
+
+        Assert.assertEquals(expectedResults, actualResults);
+        System.out.println("The expected Results were: " + expectedResults + "\n" + "...and the actual Results were: " + actualResults);
+
+
 
     }
 
